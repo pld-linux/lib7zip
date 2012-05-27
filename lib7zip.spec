@@ -1,4 +1,5 @@
-Summary:	A library using 7z.dll/7z.so(from 7-Zip) to handle different archive types
+Summary:	A library using 7z.dll/7z.so (from 7-Zip) to handle different archive types
+Summary(pl.UTF-8):	Biblioteka wykorzystująca 7z.dll/7z.so (z 7-zipa) do obsługi różnych rodzajów archiwów
 Name:		lib7zip
 Version:	1.4.1
 Release:	0.1
@@ -10,8 +11,12 @@ URL:		http://code.google.com/p/lib7zip/
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
-A library using 7z.dll/7z.so(from 7-Zip) to handle different archive
+A library using 7z.dll/7z.so (from 7-Zip) to handle different archive
 types.
+
+%description -l pl.UTF-8
+Biblioteka wykorzystująca 7z.dll/7z.so (z 7-zipa) do obsługi różnych
+rodzajów archiwów.
 
 %prep
 %setup -q
