@@ -2,13 +2,13 @@
 Summary:	A library using 7z.dll/7z.so (from 7-Zip) to handle different archive types
 Summary(pl.UTF-8):	Biblioteka wykorzystująca 7z.dll/7z.so (z 7-zipa) do obsługi różnych rodzajów archiwów
 Name:		lib7zip
-Version:	1.6.4
+Version:	1.6.5
 Release:	1
 License:	MPL v1.1
 Group:		Libraries
 #Source0Download: http://code.google.com/p/lib7zip/downloads/list
 Source0:	http://lib7zip.googlecode.com/files/%{name}-%{version}.tar.gz
-# Source0-md5:	703be8094f927e0fb5927b31607ac47d
+# Source0-md5:	a127ec183797dcf685938372dc5bf72a
 Source1:	http://downloads.sourceforge.net/p7zip/p7zip_%{p7zip_version}_src_all.tar.bz2
 # Source1-md5:	bd6caaea567dc0d995c990c5cc883c89
 Patch0:		%{name}-link.patch
