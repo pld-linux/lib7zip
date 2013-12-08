@@ -3,7 +3,7 @@ Summary:	A library using 7z.dll/7z.so (from 7-Zip) to handle different archive t
 Summary(pl.UTF-8):	Biblioteka wykorzystująca 7z.dll/7z.so (z 7-zipa) do obsługi różnych rodzajów archiwów
 Name:		lib7zip
 Version:	1.6.5
-Release:	1
+Release:	2
 License:	MPL v1.1
 Group:		Libraries
 #Source0Download: http://code.google.com/p/lib7zip/downloads/list
@@ -72,9 +72,12 @@ export P7ZIP_SOURCE_DIR="$(pwd)/p7zip_%{p7zip_version}"
 
 %install
 rm -rf $RPM_BUILD_ROOT
+install -d $RPM_BUILD_ROOT%{_includedir}
 
 %{__make} install \
 	DESTDIR=$RPM_BUILD_ROOT
+
+install -p Lib7Zip/lib7zip.h $RPM_BUILD_ROOT%{_includedir}
 
 # test programs
 %{__rm} $RPM_BUILD_ROOT%{_bindir}/test7z*
@@ -94,6 +97,7 @@ rm -rf $RPM_BUILD_ROOT
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib7zip.so
 %{_libdir}/lib7zip.la
+%{_includedir}/lib7zip.h
 
 %files static
 %defattr(644,root,root,755)
