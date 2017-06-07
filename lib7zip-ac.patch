@@ -1,0 +1,55 @@
+Create include/CPP symlink before running automake's "depfiles" commands, which would create includes/CPP directory.
+--- lib7zip-5bc54cab38656fd57df7736087ef6914ddb68c72/configure.ac.orig	2015-11-18 05:00:38.000000000 +0100
++++ lib7zip-5bc54cab38656fd57df7736087ef6914ddb68c72/configure.ac	2017-06-07 18:48:31.297434499 +0200
+@@ -1,5 +1,25 @@
+ AC_INIT([lib7zip], [2.0.0], [jingnan.si@gmail.com])
+ AC_CONFIG_SRCDIR(Lib7Zip/lib7zip.h)
++
++dnl check for p7zip source
++AC_ARG_VAR([P7ZIP_SOURCE_DIR], [p7zip source directory, must be set before compile source])
++
++if test "x$P7ZIP_SOURCE_DIR" = "x"; then
++AC_MSG_FAILURE(P7ZIP_SOURCE_DIR is not set)
++fi
++
++if test ! -d "$P7ZIP_SOURCE_DIR/C"; then
++AC_MSG_FAILURE($P7ZIP_SOURCE_DIR/C is invalid)
++fi
++
++if test ! -d "$P7ZIP_SOURCE_DIR/CPP"; then
++AC_MSG_FAILURE(P7ZIP_SOURCE_DIR is invalid)
++fi
++
++dnl create link for p7zip source
++AC_CONFIG_COMMANDS([p7zip_src_cpp_link], [ln -sf $P7ZIP_SOURCE_DIR/CPP includes/CPP])
++AC_CONFIG_COMMANDS([p7zip_src_c_link], [ln -sf $P7ZIP_SOURCE_DIR/C includes/C])
++
+ AM_INIT_AUTOMAKE([-Wall -Werror foreign subdir-objects])
+ AC_CONFIG_MACRO_DIR([m4])
+ 
+@@ -38,25 +58,6 @@
+ 
+ AM_CONDITIONAL(WIN32, test x$is_win32 = xyes)
+ 
+-dnl check for p7zip source
+-AC_ARG_VAR([P7ZIP_SOURCE_DIR], [p7zip source directory, must be set before compile source])
+-
+-if test "x$P7ZIP_SOURCE_DIR" = "x"; then
+-AC_MSG_FAILURE(P7ZIP_SOURCE_DIR is not set)
+-fi
+-
+-if test ! -d "$P7ZIP_SOURCE_DIR/C"; then
+-AC_MSG_FAILURE($P7ZIP_SOURCE_DIR/C is invalid)
+-fi
+-
+-if test ! -d "$P7ZIP_SOURCE_DIR/CPP"; then
+-AC_MSG_FAILURE(P7ZIP_SOURCE_DIR is invalid)
+-fi
+-
+-dnl create link for p7zip source
+-AC_CONFIG_COMMANDS([p7zip_src_cpp_link], [ln -sf $P7ZIP_SOURCE_DIR/CPP includes/CPP])
+-AC_CONFIG_COMMANDS([p7zip_src_c_link], [ln -sf $P7ZIP_SOURCE_DIR/C includes/C])
+-
+ AC_CONFIG_FILES([
+ 	Makefile
+ 	includes/Makefile
