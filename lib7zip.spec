@@ -5,7 +5,7 @@ Name:		lib7zip
 Version:	2.0.0
 %define	snap	20151119
 %define	gitref	5bc54cab38656fd57df7736087ef6914ddb68c72
-Release:	1.%{gitref}.1
+Release:	1.%{snap}.1
 License:	MPL v1.1
 Group:		Libraries
 #Source0Download: https://github.com/stonewell/lib7zip/releases
