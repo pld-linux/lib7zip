@@ -11,12 +11,12 @@ Source0:	https://github.com/stonewell/lib7zip/archive/%{version}/%{name}-%{versi
 # Source0-md5:	2e7b0ec5f609f46f89e205a040a4aa5a
 Source1:	http://downloads.sourceforge.net/p7zip/p7zip_%{p7zip_version}_src_all.tar.bz2
 # Source1-md5:	a0128d661cfe7cc8c121e73519c54fbf
-Patch0:		%{name}-warnings.patch
-Patch1:		%{name}-install.patch
+Patch0:		%{name}-install.patch
 URL:		https://github.com/stonewell/lib7zip
 BuildRequires:	cmake >= 2.8
 # -std=c++14
 BuildRequires:	libstdc++-devel >= 6:5.0
+BuildRequires:	sed >= 4.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -55,7 +55,11 @@ Statyczna biblioteka lib7zip.
 %prep
 %setup -q -a1
 %patch0 -p1
-%patch1 -p1
+
+%if "%{cc_version}" < "8"
+# earlier versions don't know it
+%{__sed} -i -e 's/ -Wno-class-memaccess//' CMakeLists.txt
+%endif
 
 %build
 TOPDIR=$(pwd)
