@@ -2,25 +2,21 @@
 Summary:	A library using 7z.dll/7z.so (from 7-Zip) to handle different archive types
 Summary(pl.UTF-8):	Biblioteka wykorzystująca 7z.dll/7z.so (z 7-zipa) do obsługi różnych rodzajów archiwów
 Name:		lib7zip
-Version:	2.0.0
-%define	snap	20151119
-%define	gitref	5bc54cab38656fd57df7736087ef6914ddb68c72
-Release:	1.%{snap}.1
-License:	MPL v1.1
+Version:	3.0.0
+Release:	1
+License:	MPL v2.0
 Group:		Libraries
 #Source0Download: https://github.com/stonewell/lib7zip/releases
-Source0:	https://github.com/stonewell/lib7zip/archive/%{gitref}/%{name}-%{snap}.tar.gz
-# Source0-md5:	58675fae32445e701ebf8716b973dc3f
+Source0:	https://github.com/stonewell/lib7zip/archive/%{version}/%{name}-%{version}.tar.gz
+# Source0-md5:	2e7b0ec5f609f46f89e205a040a4aa5a
 Source1:	http://downloads.sourceforge.net/p7zip/p7zip_%{p7zip_version}_src_all.tar.bz2
 # Source1-md5:	a0128d661cfe7cc8c121e73519c54fbf
-Patch0:		%{name}-link.patch
-Patch1:		%{name}-ac.patch
+Patch0:		%{name}-warnings.patch
+Patch1:		%{name}-install.patch
 URL:		https://github.com/stonewell/lib7zip
-BuildRequires:	autoconf >= 2.50
-BuildRequires:	automake
-BuildRequires:	libstdc++-devel
-BuildRequires:	libtool >= 2:2.0
-BuildRequires:	sed >= 4.0
+BuildRequires:	cmake >= 2.8
+# -std=c++14
+BuildRequires:	libstdc++-devel >= 6:5.0
 BuildRoot:	%{tmpdir}/%{name}-%{version}-root-%(id -u -n)
 
 %description
@@ -36,7 +32,7 @@ Summary:	Development files for lib7zip library
 Summary(pl.UTF-8):	Pliki programistyczne biblioteki lib7zip
 Group:		Development/Libraries
 Requires:	%{name} = %{version}-%{release}
-Requires:	libstdc++-devel
+Requires:	libstdc++-devel >= 6:5.0
 
 %description devel
 Development files for lib7zip library.
@@ -57,36 +53,28 @@ Static lib7zip library.
 Statyczna biblioteka lib7zip.
 
 %prep
-%setup -q -n %{name}-%{gitref} -a1
+%setup -q -a1
 %patch0 -p1
 %patch1 -p1
 
-# remove it when "linking libtool libraries using a non-POSIX archiver ..." warning is gone
-# (after lib7zip or libtool change)
-#%{__sed} -i -e '/AM_INIT_AUTOMAKE/s/-Werror//' configure.ac
-
 %build
-%{__libtoolize}
-%{__aclocal} -I m4
-%{__autoconf}
-%{__automake}
-export P7ZIP_SOURCE_DIR="$(pwd)/p7zip_%{p7zip_version}"
-# automake leaves some junk in includes dir
-#rm -rf includes/{C,CPP}
-%configure
+TOPDIR=$(pwd)
+install -d build
+cd build
+CXXFLAGS="%{rpmcxxflags} -Wno-error=unused-result"
+%cmake .. \
+	-DBUILD_SHARED_LIB=ON \
+	-DP7ZIP_SOURCE_DIR="${TOPDIR}/p7zip_%{p7zip_version}"
 %{__make}
 
 %install
 rm -rf $RPM_BUILD_ROOT
 install -d $RPM_BUILD_ROOT%{_includedir}
 
-%{__make} install \
+%{__make} -C build install \
 	DESTDIR=$RPM_BUILD_ROOT
 
-install -p Lib7Zip/lib7zip.h $RPM_BUILD_ROOT%{_includedir}
-
-# test programs
-%{__rm} $RPM_BUILD_ROOT%{_bindir}/test7z*
+cp -p src/lib7zip.h $RPM_BUILD_ROOT%{_includedir}
 
 %clean
 rm -rf $RPM_BUILD_ROOT
@@ -102,7 +90,6 @@ rm -rf $RPM_BUILD_ROOT
 %files devel
 %defattr(644,root,root,755)
 %attr(755,root,root) %{_libdir}/lib7zip.so
-%{_libdir}/lib7zip.la
 %{_includedir}/lib7zip.h
 
 %files static
