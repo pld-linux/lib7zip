@@ -54,7 +54,7 @@ Statyczna biblioteka lib7zip.
 
 %prep
 %setup -q -a1
-%patch0 -p1
+%patch -P0 -p1
 
 %if "%{cc_version}" < "8"
 # earlier versions don't know it
