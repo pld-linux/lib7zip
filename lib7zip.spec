@@ -3,7 +3,7 @@ Summary:	A library using 7z.dll/7z.so (from 7-Zip) to handle different archive t
 Summary(pl.UTF-8):	Biblioteka wykorzystująca 7z.dll/7z.so (z 7-zipa) do obsługi różnych rodzajów archiwów
 Name:		lib7zip
 Version:	3.0.0
-Release:	1
+Release:	2
 License:	MPL v2.0
 Group:		Libraries
 #Source0Download: https://github.com/stonewell/lib7zip/releases
@@ -65,7 +65,7 @@ Statyczna biblioteka lib7zip.
 TOPDIR=$(pwd)
 install -d build
 cd build
-CXXFLAGS="%{rpmcxxflags} -Wno-error=unused-result"
+	CXXFLAGS="%{rpmcxxflags} -Wno-error -Wno-error=unused-result"
 %cmake .. \
 	-DBUILD_SHARED_LIB=ON \
 	-DP7ZIP_SOURCE_DIR="${TOPDIR}/p7zip_%{p7zip_version}"
